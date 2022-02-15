@@ -1,0 +1,118 @@
+swagger: "2.0"
+info:
+  description: "This is a hospital management system"
+  version: "1.0.0"
+  title: "Hospital Manager"
+host: "localhost:8080"
+basePath: "/api/v1/"
+schemes:
+- "http"
+paths:
+  /hospitals:
+    get:
+      summary: "Returns all hospitals"
+      responses:
+        "200":
+          description: "The list of hospitals"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Hospital"
+    post:
+      summary: "Adds a new hospital"
+      parameters:
+      - in: "body"
+        name: "hospital"
+        required: true
+        schema:
+          $ref: "#/definitions/Hospital"
+      responses:
+        "200":
+          description: "Hospital correctly added"
+  /hospitals/{hospitalId}:
+    delete:
+      summary: "Deletes a hospital"
+      parameters:
+      - in: "path"
+        name: "hospitalId"
+        type: "integer"
+        description: "The id of the hospital to delete"
+        required: true
+      responses:
+        "204":
+          description: "The hospital has been deleted"
+  
+  /hospitals/{hospitalId}/patients:
+    get:
+      summary: "Gets all patients from a hospital"
+      parameters:
+      - in: "path"
+        name: "hospitalId"
+        type: "integer"
+        description: "The id of the hospital"
+        required: true
+      responses:
+        "200":
+          description: "The list of patients"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Patient"
+    post:
+      summary: "Adds a new patient to the hospital"
+      parameters:
+      - in: "path"
+        name: "hospitalId"
+        type: "integer"
+        description: "The id of the hospital"
+        required: true
+      - in: "body"
+        name: "patient"
+        schema:
+          $ref: "#/definitions/Patient"
+        required: true
+      responses:
+        "404":
+          description: "The hospital cannot be found"
+        "200":
+          description: "The patient has been added correctly"
+  /hospitals/{hospitalId}/patients/{patientId}:
+    delete:
+      summary: "Deletes a patient from a hospital"
+      parameters:
+      - in: "path"
+        name: "hospitalId"
+        type: "integer"
+        description: "The id of the hospital"
+        required: true
+      - in : "path"
+        name: "patientId"
+        type: "integer"
+        description: "The id of the patient"
+        required: true
+      responses:
+        "404":
+          description: "The hospital or the patients cannot be found"
+        "204":
+          description: "The patient has been deleted"
+          
+definitions:
+  Hospital:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      patients:
+        type: "array"
+        items:
+          $ref: "#/definitions/Patient"
+      
+  Patient:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
